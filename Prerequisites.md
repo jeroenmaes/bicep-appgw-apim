@@ -16,6 +16,10 @@ openssl.exe x509 -inform pem -in .\output-internal\internal-rootCA-selfsigned.cr
 ```
 
 for the gateway, portal and management endpoint we create a wildcard certificate
+
+!!! Don't forget to set the common name in step #3 !!!
+![](images/openssl.png)
+
 ```
 #1 - Create the signing request
 openssl.exe req -new -key .\output-internal\internal-CA.key -out .\output-internal\domain-internal.csr
@@ -23,16 +27,10 @@ openssl.exe req -new -key .\output-internal\internal-CA.key -out .\output-intern
 #2 - check the CSR content
 openssl.exe req -in .\output-internal\domain-internal.csr -noout -text
 
-#3 create file "openssl.ss.cnf" with content:
+#3 - Generate the certificate using the mydomain csr and key along with the CA Root key
+openssl.exe x509 -req -in .\output-internal\domain-internal.csr -CA .\output-internal\internal-rootCA-selfsigned.crt -CAkey .\output-internal\internal-CA.key -CAcreateserial -out .\output-internal\domain-internal.crt -days 500 -sha256
 
-basicConstraints=CA:FALSE
-subjectAltName=DNS:*.mydomain.internal
-extendedKeyUsage=serverAuth
-
-#4 - Generate the certificate using the mydomain csr and key along with the CA Root key
-openssl.exe x509 -req -in .\output-internal\domain-internal.csr -CA .\output-internal\internal-rootCA-selfsigned.crt -CAkey .\output-internal\internal-CA.key -CAcreateserial -extfile .\output-internal\openssl.ss.cnf -out .\output-internal\domain-internal.crt -days 500 -sha256
-
-#5 - Create .pfx file from the .crt and private.key  (p@ssword)
+#4 - Create .pfx file from the .crt and private.key  (p@ssword)
 openssl.exe pkcs12 -export -out .\output-internal\domain-internal.pfx -inkey .\output-internal\internal-CA.key -in .\output-internal\domain-internal.crt
 
 ```
