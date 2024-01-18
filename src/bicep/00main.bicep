@@ -6,13 +6,13 @@ param environment string = 'dev'
 @description('Company identifier. The value is used as prefix for the resource names')
 @minLength(3)
 @maxLength(6)
-param companycode string = 'cdt' 
+param companycode string = 'cgk' 
 
 @description('Specify the user assigned managed identity to be used to fetch the certificates on keyvault')
 param uamsi string
 
 // hypothetical suffix required by the customer
-var app_identifier = '2020'
+var app_identifier = 'demo'
 
 /*
 ------------------------------------------------
@@ -33,7 +33,6 @@ module network './01network.bicep' = {
 var appgw_public_ip =  network.outputs.ipResourceId
 var appgw_subnet_id = network.outputs.appGwResourceId
 var apim_subnet_id = network.outputs.apimResourceId
-var aci_subnet_id = network.outputs.debugResourceId
 
 /*
 ------------------------------------------------
@@ -87,22 +86,5 @@ module appgw './04appgw.bicep' = {
     appgw_subnet_id: appgw_subnet_id
     appgw_publicip_id: appgw_public_ip
     workspace_id: workspace_id
-  }
-}
-
-/*
-------------------------------------------------
-CONTAINER INSTANCE
-------------------------------------------------
-*/
-
-module aci './05aci.bicep' = {
-  name: 'aci-config'
-  params: {
-    environment_shortname: environment
-    prefix: companycode
-    app_suffix: app_identifier
-    aci_subnet_id: aci_subnet_id
-
   }
 }

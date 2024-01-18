@@ -13,12 +13,13 @@ param workspace_id string
 // default parameters
 param apim_sku string = 'Developer'
 param apim_capacity int = 1
-param apim_gatewayhostname string = 'go.apifirst.internal'
-param apim_portalhostname string = 'portal.apifirst.internal'
-param apim_mgmthostname string = 'mgmt.apifirst.internal'
-param keyvault_gw_cert string = 'go-domain-internal'
-param keyvault_mgmt_cert string = 'mgmt-domain-internal'
-param keyvault_portal_cert string = 'portal-domain-internal'
+param internal_domain string = 'demo.internal'
+param apim_gatewayhostname string = 'api.${internal_domain}'
+param apim_portalhostname string = 'portal.${internal_domain}'
+param apim_mgmthostname string = 'mgmt.${internal_domain}'
+param keyvault_gw_cert string = 'domain-internal'
+param keyvault_mgmt_cert string = 'domain-internal'
+param keyvault_portal_cert string = 'domain-internal'
 param tags object = {
   env: environment_shortname
   costCenter: '1234'
@@ -53,7 +54,7 @@ resources
 ------------------------
 */
 var apim_service_name = '${prefix}-apm-${suffix}'
-var apim_publisher_email = 'massimo.crippa@codit.eu'
+var apim_publisher_email = 'jeroen.maes@cegeka.com'
 
 
 resource apim 'Microsoft.ApiManagement/service@2021-01-01-preview' = {
